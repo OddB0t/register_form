@@ -10,22 +10,28 @@ users = []
 def register():
     if request.method == 'POST':
         # Get the submitted form data
-        username = request.form['username']
-        password = request.form['password']
-        repeat_password = request.form['repeat_password']
-        
+        username = request.form.get('username')
+        password = request.form.get('password')
+        repeat_password = request.form.get('repeat_password')
+
         # Check if the username already exists
-        if username in [user['username'] for user in users]:
+        username_exists = False
+        for user in users:
+            if user['username'] == username:
+                username_exists = True
+                break
+        if username_exists:
             return redirect('/login?error=username_exists')
-        
+
         # Check if the passwords match
         if password != repeat_password:
             return redirect('/login?error=passwords_mismatch')
-        
+
         # Register the user
-        users.append({'username': username, 'password': password})
+        user = {'username': username, 'password': password}
+        users.append(user)
         return redirect('/login')
-    
+
     # Render the register form
     return render_template('register.html')
 
