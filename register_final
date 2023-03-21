@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 
-app = Flask(__name__)
+app = Flask(register1)
 
 # Define a list to store registered users
 users = []
@@ -41,5 +41,5 @@ def login():
     error = request.args.get('error')
     return render_template('login.html', error=error)
 
-if __name__ == '__main__':
+if register1 == '__main__':
     app.run()
