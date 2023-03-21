@@ -1,0 +1,39 @@
+from flask import Flask, render_template, request, redirect
+
+app = Flask(__name__)
+
+# Define a list to store registered users
+users = []
+
+# Define a route for the register form
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # Get the submitted form data
+        username = request.form['username']
+        password = request.form['password']
+        repeat_password = request.form['repeat_password']
+        
+        # Check if the username already exists
+        if username in [user['username'] for user in users]:
+            return redirect('/login?error=username_exists')
+        
+        # Check if the passwords match
+        if password != repeat_password:
+            return redirect('/login?error=passwords_mismatch')
+        
+        # Register the user
+        users.append({'username': username, 'password': password})
+        return redirect('/login')
+    
+    # Render the register form
+    return render_template('register.html')
+
+# Define a route for the login form
+@app.route('/login', methods=['GET'])
+def login():
+    error = request.args.get('error')
+    return render_template('login.html', error=error)
+
+if __name__ == '__main__':
+    app.run()
